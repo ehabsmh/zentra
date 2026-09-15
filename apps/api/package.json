@@ -1,0 +1,6 @@
+{
+  "name": "@zentra/api",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Zentra NestJS API (scaffold in Level 1, Task 3)"
+}

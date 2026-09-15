@@ -1,0 +1,6 @@
+{
+  "name": "@zentra/web",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Zentra Next.js frontend (scaffold in Level 1, Task 6)"
+}
