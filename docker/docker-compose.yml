@@ -1,0 +1,15 @@
+name: zentra
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=zentra
+      - POSTGRES_USER=zentra
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - zentra_pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+volumes:
+  zentra_pg_data:
