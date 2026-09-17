@@ -13,6 +13,9 @@ build/
 out/
 *.tsbuildinfo
 
+# Prisma generated client
+generated/
+
 # Logs and OS
 *.log
 npm-debug.log*

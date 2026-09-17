@@ -1,35 +1,81 @@
-# Level 1 — Project Foundation & Development Environment
+# Level 1 — Backend Foundation
 
-**Status:** Not started  
+**Status:** In progress (partially already in the repo)  
 **Previous level:** —  
-**Next level:** [Level 2 — Authentication](./level-02-authentication.md) (not created yet)
+**Next level:** [Level 2 — Identity & Authentication](./level-02-authentication.md) (not created yet)
 
 ---
 
 ## Level Goal
 
-Set up a clean, professional project structure and a working development environment where the API, frontend, and database all run together locally.
+Build a professional NestJS API that you **understand**, with PostgreSQL, Prisma, API docs, tests, and a repeatable Backend workflow.
 
-After this level, you will have a real full-stack skeleton — not features yet, but a solid base to build on.
+After this level, you will have a real Backend skeleton — not product features, and **not a frontend**.
+
+The API itself is the product for a long time. We will use Swagger and HTTP tests, not a Next.js UI.
 
 ---
 
 ## Why This Level Exists
 
-Every real application starts with structure and tooling, not features.
+Every real Backend starts with structure and tooling, not features.
 
-Before we add authentication, projects, or tasks, we need:
+Before authentication, projects, or tasks, we need:
 
-- A place for backend code and frontend code
+- A clear NestJS application structure
 - A database we can connect to
-- A repeatable way to start the whole stack
-- Basic conventions so the project stays organized as it grows
+- A repeatable way to start the API locally
+- Conventions so later modules stay organized
+- A test runner we can grow from
 
-This level teaches you **how professional full-stack projects are set up**, not just how to write a single endpoint.
+This level teaches you **how a professional NestJS + Prisma API is set up**, not just how to return `"Hello World"`.
 
 > **Why this matters**
 >
-> Bad project structure becomes painful after 3–4 features. Good structure from day one makes every future level easier.
+> Bad Backend structure becomes painful after 3–4 features. Good structure from day one makes Auth, Projects, and Tasks easier.
+
+> **What this level is not**
+>
+> This is not a full-stack setup level. Frontend starts at **Level 10**, after a substantial Backend journey.
+
+---
+
+## How We Work On Every Task
+
+We do **not** jump from a Task title into code.
+
+```text
+1. Study Outline     → what to learn, and why this Task needs it
+2. Theory            → only if this Task has real ideas worth explaining
+3. Understand        → discuss, ask questions, check understanding
+4. Implementation    → only after the design is clear
+5. Testing           → prove the important behavior
+6. Review            → architecture, code, and what you learned
+7. Continue          → next Task
+```
+
+**Stop gate:** after the study outline (and theory if it exists), we pause. You should be able to explain the Task in your own words before we write production code.
+
+---
+
+## Current Repo Status
+
+Some Level 1 work already exists. We will **not** rebuild it from zero. We will understand it, then finish what is missing.
+
+| Piece | Status |
+|---|---|
+| npm workspaces (`apps/api`, `apps/web` placeholder) | Done |
+| NestJS API | Done |
+| `HealthModule` + database check | Done |
+| `PrismaService` / `PrismaModule` | Done |
+| Docker Compose PostgreSQL | Done |
+| Swagger at `/api` | Done |
+| CORS for `http://localhost:3000` | Done (for the future frontend) |
+| Env validation (`@nestjs/config`) | Missing |
+| API conventions (prefix, starter leftovers) | Partial |
+| Health unit + HTTP tests | Missing (only NestJS "Hello World" tests) |
+| Root scripts + `docs/SETUP.md` | Missing |
+| Next.js app | **Out of scope** — `apps/web` stays a placeholder until Level 10 |
 
 ---
 
@@ -37,15 +83,14 @@ This level teaches you **how professional full-stack projects are set up**, not 
 
 | Item | Description |
 |---|---|
-| Repository layout | `apps/api`, `apps/web`, `docker/`, `docs/` |
-| NestJS API | Health check endpoint, Swagger docs |
-| Next.js frontend | App Router, basic layout, home page |
-| PostgreSQL + Prisma | Database connection, first migration (empty or minimal) |
-| Docker Compose | PostgreSQL container for local dev |
-| Environment config | `.env` files with validation |
-| Root tooling | Scripts to run API, web, and DB together |
-| Smoke test | One test to prove the test runner works |
-| Documentation | Updated README and SETUP guide |
+| NestJS mental model | Understand modules, controllers, services, DI using the existing health flow |
+| Environment config | `.env` / `.env.example` and fail-fast validation |
+| API conventions | Stable URLs, JSON, Swagger as the Backend "UI" |
+| Prisma lifecycle | Confirm connect/disconnect, generated client, placeholder model |
+| Tests | Jest unit test + HTTP test for health |
+| Developer workflow | Root scripts and Backend-only setup docs |
+
+We do **not** build login, projects, Redis, or Next.js in this level.
 
 ---
 
@@ -57,13 +102,7 @@ This level teaches you **how professional full-stack projects are set up**, not 
 - **Controllers** — handle HTTP requests
 - **Providers / Services** — business logic
 - **Dependency Injection** — how NestJS wires components together
-- How the request flows: `Request → Controller → Service → Response`
-
-### Next.js
-
-- App Router folder structure (`app/`, `layout.tsx`, `page.tsx`)
-- Server vs client components (basic understanding)
-- How the frontend will talk to the API later
+- How the request flows: `Request → Controller → Service → Prisma → Response`
 
 ### Prisma
 
@@ -71,18 +110,21 @@ This level teaches you **how professional full-stack projects are set up**, not 
 - `schema.prisma` — define models
 - Migrations — version-controlled database changes
 - Prisma Client — type-safe database queries
+- How this project uses the Prisma 7 **driver adapter** (`@prisma/adapter-pg`)
 
 ### Docker
 
 - What Docker Compose does
 - Why we run PostgreSQL in a container
-- How `docker-compose up` gives everyone the same database
+- How `docker compose up` gives everyone the same database
 
 ### General
 
-- Monorepo vs separate repos (and why we chose monorepo)
+- Monorepo vs separate repos (and why we chose a monorepo)
 - Environment variables and why secrets never go in code
 - REST API basics and OpenAPI/Swagger documentation
+- Why a health check should include the database
+- Why we start Backend tests early
 
 ---
 
@@ -90,33 +132,32 @@ This level teaches you **how professional full-stack projects are set up**, not 
 
 | Technology | Role in This Level |
 |---|---|
-| Node.js | Runtime for API and tooling |
-| TypeScript | Type safety across the stack |
+| Node.js | Runtime for the API |
+| TypeScript | Type safety |
 | NestJS | Backend API framework |
-| Next.js | Frontend framework |
-| React | UI library |
-| Tailwind CSS | Utility-first styling |
-| shadcn/ui | UI component library (basic setup) |
 | PostgreSQL | Relational database |
 | Prisma | ORM and migrations |
 | Docker Compose | Local database container |
 | Swagger / OpenAPI | API documentation |
+| Jest | Backend tests |
+
+**Not in this level:** Next.js, React, Tailwind, shadcn/ui, TanStack Query, Redis.
 
 ---
 
 ## Important Concepts
 
-### 1. Monolith First
+### 1. Backend-First Monolith
 
-We build one API application and one frontend application. They deploy separately but live in one repo.
+We build **one NestJS API** and **one PostgreSQL database**. A Next.js app will exist later, in the same repo, but we do not start it now.
 
 > **Why we chose this**
 >
-> Microservices add complexity we do not need yet. A monolith is easier to develop, test, and understand.
+> Microservices add complexity we do not need. A monolith is easier to develop, test, and understand. Building Backend first means we learn NestJS + Prisma deeply before UI work splits our attention.
 
 > **Why not the simpler alternative?**
 >
-> A single folder with everything mixed together would work for a tiny script, but becomes messy fast. Separate `apps/api` and `apps/web` keeps concerns clear without over-engineering.
+> Mixing everything in one folder would work for a tiny script, but becomes messy fast. `apps/api` stays the Backend. `apps/web` waits until Level 10.
 
 ### 2. Dependency Injection (DI)
 
@@ -129,7 +170,7 @@ constructor(private readonly healthService: HealthService) {}
 
 > **Why this matters**
 >
-> DI makes code testable (you can swap real services with mocks) and keeps components loosely coupled.
+> DI makes code testable (you can swap real services with mocks) and keeps modules loosely coupled. Auth, Projects, and Tasks will use the same pattern.
 
 ### 3. Environment Configuration
 
@@ -138,17 +179,21 @@ Database URLs, ports, and secrets live in `.env` files, not in source code.
 - `.env` — local secrets (never committed)
 - `.env.example` — template showing required variables (committed)
 
+The app should **fail at startup** if required config is missing, not on the first request.
+
 ### 4. Database Migrations
 
 Schema changes are tracked as migration files. This means:
 
 - Every developer gets the same database structure
 - Production deployments apply changes safely
-- You can roll back if needed
+- You can inspect history instead of changing the DB by hand
+
+The first real product model (`User`) comes in Level 2. Level 1 only needs a working Prisma connection.
 
 ### 5. API Documentation with Swagger
 
-Swagger generates interactive API docs from your code. When we add endpoints later, they appear automatically in the docs.
+Swagger generates interactive API docs from your code. During the Backend phase, **Swagger is the product surface**. When we add endpoints later, they should appear in the docs.
 
 ---
 
@@ -157,47 +202,52 @@ Swagger generates interactive API docs from your code. When we add endpoints lat
 | Decision | Choice | Reason |
 |---|---|---|
 | Repo structure | Monorepo with `apps/` | One repo, clear separation, easy to share types later |
-| Backend framework | NestJS | Structured modules, DI, great for learning backend architecture |
-| Frontend framework | Next.js (App Router) | Modern React, SSR capability, industry standard |
+| Backend framework | NestJS | Structured modules, DI, good for learning Backend architecture |
 | Database | PostgreSQL | Relational, powerful, great with Prisma |
-| ORM | Prisma | Type-safe, good migration workflow, excellent DX |
-| Local DB | Docker Compose | Same setup on every machine, no manual PostgreSQL install |
+| ORM | Prisma | Type-safe client, migration workflow |
+| Local DB | Docker Compose | Same setup on every machine |
 | API docs | Swagger via `@nestjs/swagger` | Auto-generated, interactive, standard |
-| Styling | Tailwind + shadcn/ui | Fast development, consistent design system |
+| API port | `3001` | Leaves `3000` free for the future web app |
+| DB port | host `5433` → container `5432` | Avoids clashing with a local PostgreSQL on `5432` |
+| Frontend | Delayed until Level 10 | Backend-first learning path |
+| Redis | Delayed until Level 7 | Add it when queues/cache have a real reason |
 
 ### Target Folder Structure (After Level 1)
 
-```
+```text
 zentra/
 ├── apps/
 │   ├── api/                    # NestJS backend
 │   │   ├── src/
 │   │   │   ├── main.ts
 │   │   │   ├── app.module.ts
-│   │   │   └── health/
-│   │   │       ├── health.module.ts
-│   │   │       ├── health.controller.ts
-│   │   │       └── health.service.ts
+│   │   │   ├── health/
+│   │   │   │   ├── health.module.ts
+│   │   │   │   ├── health.controller.ts
+│   │   │   │   └── health.service.ts
+│   │   │   └── prisma/
+│   │   │       ├── prisma.module.ts
+│   │   │       └── prisma.service.ts
 │   │   ├── prisma/
-│   │   │   └── schema.prisma
+│   │   │   ├── schema.prisma
+│   │   │   └── migrations/
 │   │   ├── test/
 │   │   ├── .env.example
 │   │   └── package.json
 │   │
-│   └── web/                    # Next.js frontend
-│       ├── app/
-│       │   ├── layout.tsx
-│       │   ├── page.tsx
-│       │   └── globals.css
-│       ├── components/
-│       ├── .env.example
-│       └── package.json
+│   └── web/                    # Placeholder only until Level 10
 │
 ├── docker/
-│   └── docker-compose.yml
+│   ├── docker-compose.yml
+│   └── .env.example
 │
 ├── docs/
-├── package.json                # Root workspace scripts (optional)
+│   ├── ROADMAP.md
+│   ├── SETUP.md
+│   ├── ARCHITECTURE.md
+│   └── levels/
+│       └── level-01-foundation.md
+├── package.json                # Workspace + Backend scripts
 └── README.md
 ```
 
@@ -207,265 +257,483 @@ zentra/
 
 Complete these tasks in order. Each task builds on the previous one.
 
----
-
-### Task 1 — Repository Structure & Root Setup
-
-**Goal:** Create the folder layout and root-level configuration.
-
-**Steps:**
-1. Create `apps/api/` and `apps/web/` directories
-2. Create `docker/` directory
-3. Decide on package manager (npm workspaces or separate `package.json` per app — we will use **npm workspaces**)
-4. Create root `package.json` with workspace configuration
-5. Add root `.gitignore` (node_modules, .env, dist, .next, etc.)
-6. Update root `README.md` with project overview and pointer to `docs/`
-
-**Learn:**
-- Monorepo workspace concepts
-- What belongs at root vs inside each app
-
-**Done when:**
-- Folder structure exists
-- Root `package.json` defines workspaces
-- `.gitignore` covers Node, env files, and build output
+Existing code is **not** the same as understanding. Task 1 exists so we do not skip the foundation because files are already there.
 
 ---
 
-### Task 2 — Docker Compose for PostgreSQL
+### Task 1 — Understand The Existing NestJS API
 
-**Goal:** Run PostgreSQL locally with one command.
+**Goal:** Map the current app and explain how `GET /health` works.
 
-**Steps:**
-1. Create `docker/docker-compose.yml` with PostgreSQL service
-2. Configure: database name, user, password, port mapping (e.g., `5432:5432`)
-3. Add a named volume for data persistence
-4. Create `.env.example` at root or in `docker/` with DB connection variables
-5. Test: `docker compose up -d` → database is reachable
+**Why this task exists:** The API already runs. The skill is understanding how NestJS wires it, so later modules (Auth, Projects, Tasks) follow the same pattern on purpose.
 
-**Learn:**
-- Docker Compose services, volumes, ports
-- PostgreSQL connection string format
-
-**Done when:**
-- `docker compose up -d` starts PostgreSQL
-- You can connect with a DB client (or Prisma later)
+**What we build:** No new feature. A clear mental model of the current request flow.
 
 ---
 
-### Task 3 — NestJS API Bootstrap
+#### Study Before Implementation
 
-**Goal:** Create a running NestJS API with proper module structure.
+Study these ideas **because we will use this exact structure** for every later Backend feature:
+
+- NestJS **application structure**: `main.ts` boots the app; `AppModule` is the root.
+- **Module / Controller / Provider** — what each one is for inside `HealthModule`.
+- **Dependency Injection** — why `HealthService` receives `PrismaService` instead of creating it with `new`.
+- The full request path: `GET /health` → controller → service → Prisma → JSON.
+- Why `PrismaModule` is `@Global()`, and what `OnModuleInit` / `OnModuleDestroy` are for.
+- Why CORS is already enabled for `http://localhost:3000` even though we have no frontend yet.
+
+**Read:**
+
+- [NestJS Modules](https://docs.nestjs.com/modules)
+- [NestJS Providers](https://docs.nestjs.com/providers)
+- [NestJS Controllers](https://docs.nestjs.com/controllers)
+- [Prisma + NestJS recipe](https://docs.nestjs.com/recipes/prisma)
+
+**Practice:** On paper, draw `GET /health` through the existing files. Name each class.
+
+**Questions you should answer before we continue:**
+
+1. What is the difference between a module, a controller, and a service?
+2. Who creates `PrismaService` — you or NestJS?
+3. Why does health check the database, not only return `"ok"`?
+4. What does `main.ts` do that `AppModule` does not?
+
+---
+
+#### Theory
+
+**NestJS is opinionated on purpose.** It wants you to split:
+
+- **Controller** — HTTP in/out
+- **Service** — business rules / work
+- **Module** — which pieces belong together
+- **DI** — NestJS constructs classes and passes dependencies in
+
+This matters for Zentra because Auth, Projects, and Tasks will each become a module. If the health flow is unclear, later features will feel like copy-paste.
+
+A **module** is a boundary. `HealthModule` owns health. Later, `AuthModule` will own login. `AppModule` only imports those boundaries.
+
+---
 
 **Steps:**
-1. Scaffold NestJS app inside `apps/api/` (use Nest CLI or manual setup)
-2. Understand the generated files: `main.ts`, `app.module.ts`, `app.controller.ts`
-3. Create a `HealthModule` with:
-   - `HealthController` — `GET /health` returns `{ status: "ok", timestamp: ... }`
-   - `HealthService` — contains the health check logic
-4. Register `HealthModule` in `AppModule`
-5. Enable CORS for local frontend (`http://localhost:3000`)
-6. Configure API to run on port `3001` (or similar, to avoid conflict with Next.js)
-7. Start the API and verify `GET /health` works
+
+1. Read `apps/api/src/main.ts` — bootstrap, CORS, Swagger, port.
+2. Read `apps/api/src/app.module.ts` — what is imported.
+3. Read `health/` — controller, service, module.
+4. Read `prisma/` — why `PrismaService` extends the client, how it connects.
+5. Hit `GET /health` and match the JSON to `HealthService.checkHealth()`.
+6. Write the request map in the "What I Learned" notes (or discuss it in chat).
 
 **Learn:**
+
 - NestJS module system
 - Controller → Service pattern
 - How `main.ts` bootstraps the application
-- CORS — why the browser blocks cross-origin requests
+- How Prisma is injected, not imported ad hoc in every file
 
 **Done when:**
-- API runs on `http://localhost:3001`
-- `GET /health` returns JSON with status ok
+
+- You can explain `GET /health` without guessing
+- You can say what we should **not** rewrite yet
+
+**How we verify:**
+
+- You explain the path in your own words
+- We agree the existing health/Prisma/Swagger setup is the base, not a throwaway
 
 ---
 
-### Task 4 — Swagger / OpenAPI Setup
+### Task 2 — Environment Configuration And Fail-Fast Validation
 
-**Goal:** Auto-generated API documentation.
+**Goal:** The API starts only with valid env, and fails with a clear message when required config is missing.
 
-**Steps:**
-1. Install `@nestjs/swagger`
-2. Configure Swagger in `main.ts` with title, description, version
-3. Verify `/api` (or `/docs`) shows Swagger UI
-4. Confirm the health endpoint appears in the docs
+**Why this task exists:** `PrismaService` already throws if `DATABASE_URL` is missing. The whole app should fail in **one clear place**, and we need a committed template for required variables.
 
-**Learn:**
-- What OpenAPI is
-- How decorators document endpoints
-- Why API docs matter for frontend and future team members
-
-**Done when:**
-- Swagger UI is accessible in the browser
-- Health endpoint is documented
+**What we build:** env loading + validation for `DATABASE_URL`, `PORT`, and `NODE_ENV`. `.env.example` for the API.
 
 ---
 
-### Task 5 — Prisma Setup & Database Connection
+#### Study Before Implementation
 
-**Goal:** Connect the API to PostgreSQL through Prisma.
+Study these ideas **because JWT secrets, Redis URLs, and mail config will join the same system later**:
 
-**Steps:**
-1. Install Prisma in `apps/api/`
-2. Run `prisma init` — creates `schema.prisma` and `.env`
-3. Set `DATABASE_URL` in `.env` to point to Docker PostgreSQL
-4. Create a minimal schema (e.g., empty or a placeholder model — real models come in Level 2)
-5. Run first migration: `prisma migrate dev --name init`
-6. Create `PrismaService` as a NestJS provider (injectable)
-7. Create `PrismaModule` (global) and import in `AppModule`
-8. Update `HealthService` to check database connectivity (e.g., `prisma.$queryRaw` or simple query)
-9. Health endpoint returns DB status: `{ status: "ok", database: "connected" }`
+- What **environment variables** are, and why secrets never go in git.
+- Difference between `.env` (local, gitignored) and `.env.example` (template, committed).
+- Why apps should **fail at startup** instead of failing on the first request.
+- How `@nestjs/config` loads env, and how Joi or Zod can validate it.
+- Where this project already reads `.env` (`main.ts` `loadLocalEnv()`, `PrismaService`, `prisma.config.ts`) — we want one consistent approach, not three different ones.
 
-**Learn:**
-- Prisma schema syntax
-- Migration workflow
-- How to integrate Prisma with NestJS via a service
-- Why health checks should include database status
+**Read:**
 
-**Done when:**
-- Migration applied successfully
-- Health endpoint reports database connection status
+- [NestJS Configuration](https://docs.nestjs.com/techniques/configuration)
+
+**Questions you should answer before we continue:**
+
+1. Why is fail-fast better than a random Prisma error later?
+2. What belongs in `.env.example`, and what must never be committed?
+3. Should the API start if `PORT` is missing? What default is acceptable?
 
 ---
 
-### Task 6 — Next.js Frontend Bootstrap
+#### Theory
 
-**Goal:** Create a running frontend with basic layout.
+**Configuration is part of the application contract.** If the database URL is missing, the process is not "almost working" — it is misconfigured.
 
-**Steps:**
-1. Scaffold Next.js app inside `apps/web/` (App Router, TypeScript, Tailwind)
-2. Set up basic `layout.tsx` with app name and simple navigation placeholder
-3. Create home page (`page.tsx`) with welcome message
-4. Install and configure shadcn/ui (init + one sample component, e.g., Button)
-5. Configure frontend to run on port `3000`
-6. Add `.env.local` with `NEXT_PUBLIC_API_URL=http://localhost:3001`
-7. On the home page, fetch `GET /health` from the API and display the result
-8. Handle loading and error states on the health check display
+Fail-fast means:
 
-**Learn:**
-- Next.js App Router structure
-- Environment variables in Next.js (`NEXT_PUBLIC_` prefix)
-- Fetching from an API in a client or server component
-- Tailwind CSS basics
-- shadcn/ui installation and usage
+- the process exits (or refuses to listen)
+- the error names the missing variable
+- you do not discover the problem only when `/health` is called
 
-**Done when:**
-- Frontend runs on `http://localhost:3000`
-- Home page shows API health status from the backend
+This is the same idea we will later use for `JWT_SECRET`: never boot an auth API with a missing or weak secret.
 
 ---
 
-### Task 7 — Environment Configuration & Validation
-
-**Goal:** Safe, validated environment setup for both apps.
-
 **Steps:**
-1. Create `.env.example` for API (DATABASE_URL, PORT, NODE_ENV)
-2. Create `.env.example` for web (NEXT_PUBLIC_API_URL)
-3. Add env validation in NestJS (e.g., `@nestjs/config` with Joi or Zod)
-4. App fails fast on startup if required env vars are missing
-5. Document all env vars in `docs/SETUP.md`
+
+1. Add `apps/api/.env.example` with `DATABASE_URL`, `PORT`, `NODE_ENV` (no real secrets).
+2. Confirm `.env` is gitignored and `.env.example` is not.
+3. Add NestJS config + validation (Joi or Zod — we will pick one and stay consistent).
+4. Fail clearly when `DATABASE_URL` is missing or empty.
+5. Keep Docker DB settings documented (`docker/.env.example` and compose).
 
 **Learn:**
+
 - Why apps should fail fast on missing config
-- `@nestjs/config` module
-- Difference between server-side and client-side env vars
+- `@nestjs/config`
+- Difference between runtime env and Docker env
 
 **Done when:**
-- Missing env var causes clear error on startup
-- `.env.example` files are committed; `.env` files are gitignored
-- `docs/SETUP.md` lists all required variables
+
+- Missing `DATABASE_URL` causes a clear startup error
+- `.env.example` exists for the API
+- Valid `.env` still starts the API and health reports the database
+
+**How we verify:**
+
+- Start with a missing var → clear failure
+- Start with valid `.env` → API + `GET /health` work
 
 ---
 
-### Task 8 — Root Scripts & Developer Experience
+### Task 3 — API Conventions And Swagger As The Product Surface
 
-**Goal:** One-command workflows for daily development.
+**Goal:** Stable HTTP conventions: URLs, JSON, Swagger, and no unused NestJS starter endpoints as the "real API".
+
+**Why this task exists:** For many levels, Swagger **is** the UI. Conventions now prevent Auth and Projects from each inventing a different response style.
+
+**What we build:** agreed URL layout, documented health endpoint, cleanup of starter leftovers if we decide they should not be the public API.
+
+---
+
+#### Study Before Implementation
+
+Study these ideas **because every later endpoint will follow this contract**:
+
+- REST basics: resources, HTTP verbs, status codes (`200`, `400`, `401`, `404`).
+- Why a **global prefix** (for example `/api`) can help — and the conflict we already have: Swagger is mounted at `/api` today, while health is at `/health`.
+- Where **health** should live so later production probes stay simple (`/health` is a common choice, even if business routes live under `/api`).
+- What OpenAPI/Swagger is for, and how NestJS decorators document endpoints.
+- Why `GET /` returning `"Hello World!"` is starter code, not a Zentra resource.
+
+**Read:**
+
+- [NestJS OpenAPI](https://docs.nestjs.com/openapi/introduction)
+
+**Questions you should answer before we continue:**
+
+1. Why document the API now, before a frontend exists?
+2. What should `GET /health` return if PostgreSQL is down?
+3. Should Swagger stay at `/api`, move to `/docs`, or should business routes get a prefix? Why?
+
+---
+
+#### Theory
+
+A **REST API** is a contract: URLs, methods, and status codes mean something.
+
+**OpenAPI** is a description of that contract. Swagger UI is a live explorer generated from it.
+
+We do not need a fancy response wrapper in Level 1. We do need:
+
+- predictable paths
+- documented endpoints
+- JSON for health
+- no accidental public starter routes if they confuse the real API
+
+Health is special: production systems ping it to decide if the process is alive. That is why it should stay simple and reliable.
+
+---
 
 **Steps:**
-1. Add root scripts (in root `package.json`):
-   - `dev:api` — start NestJS in watch mode
-   - `dev:web` — start Next.js dev server
-   - `dev` — start both concurrently (use `concurrently` package)
-   - `docker:up` / `docker:down` — manage Docker Compose
-   - `db:migrate` — run Prisma migrations
-2. Document the full startup flow in `docs/SETUP.md`:
-   - Clone repo → copy `.env.example` → `docker compose up` → `npm install` → `npm run dev`
+
+1. Decide URL layout (health vs docs vs future resource routes) and write it down.
+2. Apply the decision in `main.ts` / controllers.
+3. Make sure health is documented in Swagger.
+4. Remove or stop treating `AppController` "Hello World" as a product endpoint, if we agree it is leftover.
 
 **Learn:**
+
+- REST naming and status codes at a basic level
+- How Swagger decorators document endpoints
+- Why API docs matter while the Backend is the product
+
+**Done when:**
+
+- Swagger UI loads
+- Health is documented
+- URLs match the written convention
+- Starter leftovers are not the public face of Zentra
+
+**How we verify:**
+
+- Open Swagger in the browser
+- Call health from Swagger and from HTTP
+- `GET /` behavior matches the decision (removed, redirected, or clearly not a resource)
+
+---
+
+### Task 4 — Prisma Client Lifecycle In NestJS
+
+**Goal:** Confirm Prisma connect/disconnect and the generated client are correct. Understand the placeholder model. Do not add product tables yet.
+
+**Why this task exists:** Zentra uses Prisma 7-style **driver adapter** (`@prisma/adapter-pg`). That is easy to copy and hard to understand. Level 2 will add `User` on top of this setup.
+
+**What we build:** a confirmed Prisma lifecycle, not a new domain model.
+
+---
+
+#### Study Before Implementation
+
+Study these ideas **because every later table will migrate through this pipeline**:
+
+- What an **ORM** does, and what Prisma still does not hide (indexes, transactions, SQL).
+- The pipeline: `schema.prisma` → **migration** → **Prisma Client**.
+- Why this project generates the client into `src/generated/prisma`.
+- What `PrismaPg` is doing: Prisma talks to PostgreSQL through the `pg` driver.
+- Why `placeholder` exists, and that **User** in Level 2 will be the first real model.
+- Why `PrismaService` is a NestJS provider with `onModuleInit` / `onModuleDestroy`.
+
+**Read:**
+
+- [Prisma schema](https://www.prisma.io/docs/orm/prisma-schema)
+- [Prisma migrations](https://www.prisma.io/docs/orm/prisma-migrate)
+- [Prisma + NestJS recipe](https://docs.nestjs.com/recipes/prisma)
+
+**Questions you should answer before we continue:**
+
+1. What problem does a migration solve that “change the DB by hand” does not?
+2. Why is `PrismaService` a NestJS provider, not a random imported singleton in every file?
+3. What happens if we forget `$disconnect` when the process shuts down?
+4. Why is a placeholder model here instead of an empty schema?
+
+---
+
+#### Theory
+
+An **ORM** (Object-Relational Mapper) lets you work with tables using objects and TypeScript types. Prisma is the ORM.
+
+A **migration** is a recorded SQL change. It is how the team (and production) apply the same schema.
+
+Prisma Client is generated code. That is why the project has `src/generated/prisma` — TypeScript must know the models.
+
+The **adapter** is Prisma’s way of using a standard Node PostgreSQL driver (`pg`) instead of a bundled engine connection. You do not need every Prisma 7 internal detail yet. You do need to know: **no `DATABASE_URL` means no client**.
+
+We keep `placeholder` until Level 2. Removing it now without a real model can make migrations awkward. Replacing it with `User` is the right moment.
+
+---
+
+**Steps:**
+
+1. Read `schema.prisma`, `prisma.config.ts`, and the init migration.
+2. Confirm `PrismaService` connect/disconnect and adapter setup.
+3. Confirm health still uses `$queryRaw` / `SELECT 1` (or equivalent).
+4. Only change code if we find a real lifecycle bug (double connect, missing env, broken disconnect).
+5. Note in docs: first real model is `User` in Level 2.
+
+**Learn:**
+
+- Prisma schema and migrations
+- NestJS lifecycle hooks for infrastructure
+- Why health includes database status
+
+**Done when:**
+
+- You can explain schema → migrate → client → `PrismaService`
+- Health still reports `database: "connected"`
+- We are not inventing `User` / `Project` tables yet
+
+**How we verify:**
+
+- Restart the API; health shows connected
+- You can explain the adapter setup in simple words
+- `placeholder` is understood as temporary
+
+---
+
+### Task 5 — Backend Test Runner And Health Tests
+
+**Goal:** Prove the test infrastructure works with tests that actually protect health — not only `"Hello World"`.
+
+**Why this task exists:** Jest already exists, but the current tests cover the starter controller. We want a habit of testing **our** code before Auth.
+
+**What we build:** a unit test for `HealthService` (mock Prisma) and an HTTP test for `GET /health`.
+
+---
+
+#### Study Before Implementation
+
+Study these ideas **because Auth tests in Level 2 will grow from this setup**:
+
+- **Unit test:** one class, dependencies mocked.
+- **HTTP / e2e-style test:** real NestJS HTTP layer, closer to a real request.
+- How the NestJS testing module replaces `PrismaService` with a mock.
+- Why we mock Prisma in a health **unit** test, but will use a real test database later for Auth.
+- Where tests live (`*.spec.ts` vs `test/*.e2e-spec.ts`).
+
+**Read:**
+
+- [NestJS Testing](https://docs.nestjs.com/fundamentals/testing)
+
+**Questions you should answer before we continue:**
+
+1. Why mock Prisma in a unit test, but not in a later auth integration test?
+2. What is the smallest test that still protects the health endpoint?
+3. Should a disconnected database make the HTTP test fail, return `status: "error"`, or both?
+
+---
+
+#### Theory
+
+Tests are a safety net, not a score.
+
+For Level 1:
+
+- A **unit test** proves `HealthService` maps “Prisma works” → `{ status: "ok", database: "connected" }` and “Prisma throws” → error/disconnected.
+- An **HTTP test** proves the route exists and returns JSON.
+
+We do **not** need coverage percentages, frontend tests, or a huge suite. We need the runner + one meaningful example.
+
+Later, Auth will need a real database. Health can still use a mock for the unit test because the rule is simple.
+
+---
+
+**Steps:**
+
+1. Review existing Jest config and the starter `AppController` tests.
+2. Add `HealthService` unit tests with a mocked `PrismaService`.
+3. Add an HTTP test for `GET /health`.
+4. Decide what to do with `"Hello World"` tests after Task 3 cleanup.
+5. Run the API test command and confirm it passes.
+
+**Learn:**
+
+- Where tests live in a NestJS app
+- Basic Jest + `@nestjs/testing`
+- Why we start testing early
+
+**Done when:**
+
+- API tests pass
+- Health has unit coverage for connected + disconnected
+- HTTP test covers `GET /health`
+
+**How we verify:**
+
+- Test command is green
+- Breaking the health return shape would fail a test
+
+---
+
+### Task 6 — Backend Developer Workflow And Level Wrap-Up
+
+**Goal:** One-command Backend workflows and docs so a developer can go from clone → running API without guessing.
+
+**Why this task exists:** Daily work should be boring and repeatable. We also close Level 1 with architecture notes — Backend only.
+
+**What we build:** root scripts, `docs/SETUP.md`, initial `docs/ARCHITECTURE.md`, README updates.
+
+---
+
+#### Study Before Implementation
+
+Study these ideas **because this repo is a monorepo, and scripts belong at the right level**:
+
+- What `npm workspaces` already does in the root `package.json`.
+- Which commands a Backend developer runs every day (install, docker, migrate, start API, test).
+- Why we do **not** add `dev:web` as a real workflow until Level 10.
+- What belongs in `README.md` (short) vs `SETUP.md` (steps) vs `ARCHITECTURE.md` (how the system is shaped).
+
+**Questions you should answer before we continue:**
+
+1. What is the exact happy-path startup order?
+2. Which secrets must the setup guide mention without putting real passwords in git?
+
+There is no extra Theory section here. This task is practical.
+
+---
+
+**Steps:**
+
+1. Add root scripts, for example:
+   - `dev:api` — NestJS watch mode
+   - `docker:up` / `docker:down`
+   - `db:migrate` — Prisma migrate
+   - `test:api` — API tests
+2. Write `docs/SETUP.md`:
+   - clone → `npm install` → copy env files → `docker compose up` → migrate → start API → open Swagger
+3. Write `docs/ARCHITECTURE.md` with the current picture:
+   - one NestJS API
+   - PostgreSQL in Docker
+   - Prisma
+   - no frontend yet
+4. Update root `README.md` (stack, current level, link to setup/roadmap).
+5. Run the full Backend check:
+   - Docker PostgreSQL up
+   - API starts
+   - `GET /health` reports database connected
+   - Swagger loads
+   - tests pass
+6. Fill in "What I Learned" below.
+
+**Learn:**
+
 - Developer experience (DX) matters
 - How monorepo scripts simplify daily work
+- How to document a Backend so future-you can start it cold
 
 **Done when:**
-- `npm run dev` starts API + frontend together
-- `docs/SETUP.md` lets a new developer go from clone to running app
 
----
-
-### Task 9 — Smoke Test
-
-**Goal:** Prove the test infrastructure works.
-
-**Steps:**
-1. Configure Jest in the NestJS app (comes with NestJS scaffold)
-2. Write one unit test for `HealthService` (e.g., returns status "ok")
-3. Run `npm test` — test passes
-
-**Learn:**
-- Where tests live in a NestJS app
-- Basic Jest syntax
-- Why we start testing early (even one test establishes the habit)
-
-**Done when:**
-- `npm test` passes with at least one health service test
-
----
-
-### Task 10 — Documentation & Level Wrap-Up
-
-**Goal:** Document what was built and verify everything works end-to-end.
-
-**Steps:**
-1. Update root `README.md` with:
-   - Project description
-   - Tech stack
-   - Quick start (link to `docs/SETUP.md`)
-   - Link to roadmap
-2. Create `docs/SETUP.md` with full setup instructions
-3. Create `docs/ARCHITECTURE.md` with initial architecture overview (monolith, apps, DB)
-4. Run full end-to-end check:
-   - `docker compose up -d`
-   - `npm run dev`
-   - Frontend loads → shows health status → database connected
-   - Swagger docs accessible
-   - Tests pass
-5. Fill in "What I Learned" section below
-6. Update roadmap status to Level 1 complete
-
-**Done when:**
-- All docs are in place
-- Full stack runs without errors
+- `SETUP.md` gets a new developer from clone to a running API
+- Architecture notes match the repo
 - You can explain the project structure to someone else
+- Frontend was **not** scaffolded
+
+**How we verify:**
+
+- Follow `SETUP.md` as if you were new
+- No undocumented manual steps
+- Level 1 expected result checklist is true
 
 ---
 
 ## Expected Result
 
-After Level 1, the project looks like this:
+After Level 1, the Backend looks like this:
 
-```
+```text
 ✅ NestJS API running on :3001
-✅ Next.js frontend running on :3000
 ✅ PostgreSQL in Docker
 ✅ Prisma connected with first migration
-✅ GET /health → { status: "ok", database: "connected" }
-✅ Swagger docs at /api
-✅ Frontend displays API health status
-✅ One passing smoke test
-✅ SETUP.md for new developers
+✅ GET /health → { status: "ok", database: "connected" } (or equivalent)
+✅ Swagger docs accessible
+✅ Env validation fails fast when required vars are missing
+✅ Health unit + HTTP tests pass
+✅ SETUP.md for Backend developers
+✅ apps/web still a placeholder (no Next.js app)
 ```
 
-**The product does not have features yet** — but it has a professional foundation ready for Level 2 (Authentication).
+**The product does not have features yet.** It has a professional Backend foundation ready for Level 2 (Identity & Authentication).
 
 ---
 
@@ -476,11 +744,13 @@ After Level 1, the project looks like this:
 ### Concepts I understand now:
 
 - [ ] NestJS modules, controllers, services, and DI
-- [ ] How Prisma schema and migrations work
+- [ ] How `GET /health` flows through this codebase
+- [ ] How Prisma schema, migrations, and the generated client work
+- [ ] Why this project uses a Prisma driver adapter
 - [ ] Docker Compose for local PostgreSQL
-- [ ] Next.js App Router basics
-- [ ] Environment variable management
+- [ ] Environment variable management and fail-fast config
 - [ ] Swagger/OpenAPI documentation
+- [ ] Why we test health with a mock in unit tests
 
 ### Things that were harder than expected:
 
@@ -498,14 +768,16 @@ Questions you should be able to answer after this level:
 
 1. **What is Dependency Injection and why does NestJS use it?**
 2. **What is the difference between a NestJS module, controller, and service?**
-3. **What does an ORM do? Why use Prisma instead of raw SQL?**
+3. **What does an ORM do? Why use Prisma instead of raw SQL for most queries?**
 4. **What is a database migration and why is it important?**
-5. **What is Docker Compose and why do we use it for local development?**
-6. **What is CORS and why did we need to enable it?**
+5. **What is Docker Compose and why do we use it for local PostgreSQL?**
+6. **What is CORS and why is it already enabled if there is no frontend yet?**
 7. **What is the difference between `.env` and `.env.example`?**
-8. **What is a monorepo and what are its advantages?**
+8. **What is a monorepo and what are its advantages here?**
 9. **What is Swagger/OpenAPI used for?**
 10. **How does a health check endpoint help in production?**
+11. **Why should the API fail at startup when `DATABASE_URL` is missing?**
+12. **Why mock Prisma in a health unit test, but use a real database later for auth tests?**
 
 ---
 
@@ -514,19 +786,22 @@ Questions you should be able to answer after this level:
 - [NestJS Documentation](https://docs.nestjs.com/)
 - [NestJS Modules](https://docs.nestjs.com/modules)
 - [NestJS Providers & DI](https://docs.nestjs.com/providers)
-- [Next.js App Router](https://nextjs.org/docs/app)
-- [Prisma Getting Started](https://www.prisma.io/docs/getting-started)
+- [NestJS Configuration](https://docs.nestjs.com/techniques/configuration)
+- [NestJS OpenAPI](https://docs.nestjs.com/openapi/introduction)
+- [NestJS Testing](https://docs.nestjs.com/fundamentals/testing)
+- [Prisma schema](https://www.prisma.io/docs/orm/prisma-schema)
+- [Prisma migrations](https://www.prisma.io/docs/orm/prisma-migrate)
 - [Prisma with NestJS](https://docs.nestjs.com/recipes/prisma)
 - [Docker Compose](https://docs.docker.com/compose/)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [shadcn/ui](https://ui.shadcn.com/docs)
 
 ---
 
 ## Next Level Preview
 
-**Level 2 — Authentication & User Identity**
+**Level 2 — Identity & Authentication**
 
-We will add user registration, login, JWT tokens, password hashing, and protected routes. The Prisma schema will get its first real model: `User`.
+We will add the first real model (`User`), registration, login, JWT access tokens, refresh tokens, password hashing, guards, DTOs, and consistent errors.
 
-But first — finish Level 1 completely. A solid foundation makes everything after it smoother.
+Still no frontend.
+
+But first — finish Level 1 completely. A Backend you understand is more useful than a Backend you only copied.

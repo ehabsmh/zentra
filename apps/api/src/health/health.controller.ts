@@ -13,7 +13,7 @@ export class HealthController {
     description: 'API is running...',
     example: {
       status: 'ok',
-      timestamp: '2026-09-15T12:00:00.000Z',
+      database: 'connected',
     },
   })
   getHealth() {
