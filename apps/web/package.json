@@ -2,5 +2,5 @@
   "name": "@zentra/web",
   "version": "0.0.1",
   "private": true,
-  "description": "Zentra Next.js frontend (scaffold in Level 1, Task 6)"
+  "description": "Zentra web app placeholder until a later level. Do not scaffold Next.js in Level 1."
 }

@@ -759,5 +759,5 @@ These are **not forgotten** — they come when the product needs them:
 ## Status
 
 - **Roadmap:** Approved
-- **Current level:** Level 1 — Project Foundation & Development Environment
-- **Next step:** Start Level 1, Task 1
+- **Current level:** Level 1 — Backend Foundation (**complete**)
+- **Next step:** Start Level 2 — Identity & Authentication (backend only; no frontend yet)

@@ -7,7 +7,12 @@
     "apps/*"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:api": "npm run start:dev --workspace=@zentra/api",
+    "docker:up": "docker compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f docker/docker-compose.yml down",
+    "db:migrate": "npm run prisma:migrate --workspace=@zentra/api",
+    "test": "npm run test:api",
+    "test:api": "npm run test --workspace=@zentra/api && npm run test:e2e --workspace=@zentra/api"
   },
   "repository": {
     "type": "git",
