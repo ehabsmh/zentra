@@ -8,6 +8,10 @@ datasource db {
   provider = "postgresql"
 }
 
-model placeholder {
-  id      Int     @id     @default(autoincrement())
+model User {
+  id        String     @id     @default(uuid())
+  email     String     @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

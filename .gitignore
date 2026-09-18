@@ -29,3 +29,7 @@ coverage/
 .idea/
 .vscode/
 *.swp
+
+# Learning docs (local only — not pushed to GitHub)
+docs/ROADMAP.md
+docs/levels/
